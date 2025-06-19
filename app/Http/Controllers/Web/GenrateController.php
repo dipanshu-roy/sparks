@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Genrateurl;
+use App\Models\SchoolDetails;
 use App\Models\SchoolRegistration;
 use Illuminate\Http\Request;
 
@@ -34,10 +35,15 @@ class GenrateController extends Controller
             'registration_id' => 'required|string|max:255',
         ]);
         
-        // Manually add the additional fields after validation
-        $validated['school_url'] = "https://sspl20.com/SO" . $validated['registration_id'];
+        $school = SchoolDetails::where('registration_id',$validated['registration_id'])->first();
+        $school_code = 'so'.$school->state_id.date('Y').str_pad(SchoolDetails::count() + 1, 4, '0', STR_PAD_LEFT);
+
+        $validated['school_url'] = url('school-login/'.$school_code);
         $validated['status'] = 0;        
-        $registration = Genrateurl::create($validated);
+        $registration = Genrateurl::firstOrCreate(
+            ['registration_id' => $validated['registration_id']],
+            $validated
+        );
 
         $sch_id="sosch".date("Y").$validated['registration_id'];
         SchoolRegistration::where('id', $validated['registration_id'])
@@ -49,7 +55,7 @@ class GenrateController extends Controller
       //  date("Y")
       //  session()->flush();
         return view('web.thankyou', [
-            'schoolUrl' => env('APP_URL').'school-login',
+            'schoolUrl' => $validated['school_url'],
             'schoolId' => $sch_id,
             'tempPassword' => '12345678'
         ]);

@@ -44,7 +44,6 @@
                                 <div class="mb-3">
                                     <label for="title_id" class="form-label">Title* </label>
                                     <select name="title_id" id="title_id" class="form-control" id="title" required>
-                                        <option value="">Select Title</option>
                                         @foreach ($title as $t)
                                             <option value="{{ $t->id }}" {{ isset($head_of_school) && $head_of_school->title_id == $t->id ? 'selected' : '' }}>{{ $t->title }}</option>
                                         @endforeach
@@ -152,19 +151,22 @@
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <script>
         document.getElementById('register_head').addEventListener('submit', function(e) {
             e.preventDefault();
             @if(!empty($head_of_school))
-                @if($head_of_school->is_mobile_validate==0)
-                    var title = "Mobile Number Not Verified";
-                    var decription = "Do you want to proceed without verifying your mobile number?";
+                @if($head_of_school->is_mobile_validate==0 && $head_of_school->is_validate==0)
+                    var title = "Mobile Number and Email Not Verified";
+                    var decription = "Do you want to proceed without verifying your mobile number and email address?";
                 @elseif($head_of_school->is_validate==0)
                     var title = "Email Not Verified";
                     var decription = "Do you want to proceed without verifying your email address?";
+                @elseif($head_of_school->is_mobile_validate==0)
+                    var title = "Mobile Number Not Verified";
+                    var decription = "Do you want to proceed without verifying your mobile number?";
                 @else
-                    var title = "Mobile Number and Email Not Verified";
-                    var decription = "Do you want to proceed without verifying your mobile number and email address?";
+                this.submit();
                 @endif
             @else
                 var title = "Mobile Number and Email Not Verified";
@@ -275,6 +277,9 @@ $(document).ready(function () {
                     $('#mobileOtpWrapper').addClass('d-none');
                     $('#mobile').prop('readonly', true);
                     $('#verifyMobile').addClass('d-none');
+                    setTimeout(() => {
+                        location.reload();
+                    },1000);
                 } else {
                     mobileStatus.text('Invalid OTP').removeClass('text-success').addClass('text-danger');
                 }
@@ -359,6 +364,9 @@ $(document).ready(function () {
                     $('#emailOtpWrapper').addClass('d-none');
                     $('#email').prop('readonly', true);
                     $('#verifyEmail').addClass('d-none');
+                    setTimeout(() => {
+                        location.reload();
+                    },1000);
                 } else {
                     emailStatus.text('Invalid OTP').removeClass('text-success').addClass('text-danger');
                 }

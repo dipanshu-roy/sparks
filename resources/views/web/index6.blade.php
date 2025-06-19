@@ -297,7 +297,7 @@
             preloader.style.display = 'flex';
             const message = document.createElement('div');
             message.className = 'preloader-message';
-            message.textContent = 'Please wait, we are processing your data...';
+            message.textContent = 'Please wait, we are registering you...';
             preloader.appendChild(message);
         }
         function hideloader(){

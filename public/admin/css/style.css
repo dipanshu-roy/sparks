@@ -8574,3 +8574,6 @@ table.dataTable tbody > tr.selected td.select-checkbox:after, table.dataTable tb
 		box-shadow: 0 0 0 0 rgba(4, 169, 245, 0)
 	}
 }
+.auth-wrapper .auth-content img{
+  border-radius: 40px;
+}

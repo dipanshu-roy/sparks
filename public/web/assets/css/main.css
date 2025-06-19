@@ -4766,3 +4766,6 @@ section,
 .font-size-12{
   font-size: 12px;
 }
+.auth-wrapper .auth-content img{
+  border-radius: 40px;
+}

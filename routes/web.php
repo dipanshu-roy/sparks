@@ -13,6 +13,7 @@ use App\Http\Controllers\Web\HeadofSchoolController;
 use App\Http\Controllers\Web\SparkCordinatorController;
 use App\Http\Controllers\Web\SchollenrolmentController;
 use App\Http\Controllers\Web\GenrateController;
+use App\Http\Controllers\Web\StudentController;
 use App\Http\Controllers\School\SchoolLoignController;
 use Illuminate\Support\Facades\Route;
 
@@ -71,5 +72,13 @@ Route::post('verify-otp-mobile', [CommonController::class, 'verifyOtpMobile']);
 
 Route::post('send-otp-email', [CommonController::class, 'sendOtpEmail']);
 Route::post('verify-otp-email', [CommonController::class, 'verifyOtpEmail']);
+Route::get('get-subject/{state_id}', [CommonController::class, 'Getsubject']);
+
+Route::get('school-login/{code}', [SchoolLoignController::class, 'index'])->name('school.login.code');
+Route::get('school-login/{code}/{codex}', [SchoolLoignController::class, 'student'])->name('school.login.codex');
+Route::get('student-form', [StudentController::class, 'create'])->name('students.create');
+Route::post('store-student-form', [StudentController::class, 'store'])->name('students.store');
+Route::get('register-successfully', [StudentController::class, 'register_successfully'])->name('register.successfully');
+
 
 require __DIR__.'/auth.php';

@@ -15,6 +15,7 @@ use App\Models\Headofschool;
 use App\Models\SparkCordinator;
 use App\Models\Schoolenrolment;
 use App\Models\LabsDetails;
+use App\Models\Subject;
 use Illuminate\Support\Facades\Session;
 
 
@@ -74,6 +75,7 @@ class CommonController extends Controller
     }
     public function thankyou(Request $request){
         $schoolid = $request->registration_id;
+        
         return view('web.thankyou', [
             'schoolUrl' => 'https://schoolportal.example.com',
             'schoolId' => 'SCH123456',
@@ -172,5 +174,10 @@ class CommonController extends Controller
             return response()->json(['status' => 'ok']);
         }
         return response()->json(['status' => 'error']);
+    }
+    public function Getsubject($state_id)
+    {
+        return $subjects = Subject::whereRaw("FIND_IN_SET(?, class_id)", [$state_id])->get();
+         return response()->json($subjects);
     }
 }

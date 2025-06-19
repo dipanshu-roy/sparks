@@ -8,24 +8,31 @@ use App\Http\Requests\Auth\SchoolLoginRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
-
+use App\Models\SchoolDetails;
+use App\Models\SchoolRegistration;
 class SchoolLoignController extends Controller
 {
     public function  index(){
         return view('school.auth-signin');
     }
 
+    public function create(): View
+    {
+        return view('school.auth-signin');
+    }
+
+
     public function store(SchoolLoginRequest $request): RedirectResponse
     {
         try {
             $request->authenticate();
             $request->session()->regenerate();
-    
+
             return redirect()->intended(route('school.dashboard', absolute: false));
-        } catch (ValidationException $e) {
-            // Optional: You can customize error handling, e.g., adding a general error message
-            return redirect()->back()->withErrors($e->errors())->withInput();
-        }
+            } catch (ValidationException $e) {
+                // Optional: You can customize error handling, e.g., adding a general error message
+                return redirect()->back()->withErrors($e->errors())->withInput();
+            }
     }
     
 
@@ -40,5 +47,10 @@ class SchoolLoignController extends Controller
 
         return redirect('school-login');
     }
-    
+
+
+    public function student($code,$codex){
+        $sd = SchoolRegistration::where('school_id',$code)->first(); 
+        return view('web.student',compact('sd','code'));
+    }
 }

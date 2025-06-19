@@ -77,7 +77,6 @@ class SparkCordinatorController extends Controller
             ['registration_id' => $request->registration_id],
             $data
         );
-
         return redirect(route('school_enroll.create'))->with('success', 'Spark Coordinator Registered Successfully');
     }
 

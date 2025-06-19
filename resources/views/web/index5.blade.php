@@ -49,7 +49,6 @@
                                 <div class="mb-3">
                                     <label for="title_id" id="title_id" class="form-label">Title*</label>
                                     <select name="title_id" class="form-control" id="title" required>
-                                        <option value="">Select Title</option>
                                         @foreach($title as $t)
                                             <option value="{{$t->id}}" {{ isset($spark_cordinator) && $spark_cordinator->title_id == $t->id ? 'selected' : '' }}>{{$t->title}}</option>
                                         @endforeach
