@@ -3,7 +3,7 @@
 
 <head>
 
-	<title>Spark Admin</title>
+	<title>Spark Olympiad - Admin</title>
 	<!-- HTML5 Shim and Respond.js IE11 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 	<!--[if lt IE 11]>
@@ -20,7 +20,8 @@
 	<meta name="author" content="Codedthemes" />
 
 	<!-- Favicon icon -->
-	<link rel="icon" href="{{asset('admin/images/favicon.ico')}}" type="image/x-icon">
+	<link href="{{ asset('web/assets/img/favicon.png') }}" rel="icon">
+    <link href="{{ asset('web/assets/img/apple-touch-icon.png') }}" rel="apple-touch-icon">
 	<!-- fontawesome icon -->
 	<link rel="stylesheet" href="{{asset('admin/fontawesome/css/fontawesome-all.min.css')}}">
 	<!-- animation css -->
@@ -28,6 +29,54 @@
 
 	<!-- vendor css -->
 	<link rel="stylesheet" href="{{asset('admin/css/style.css')}}">
+	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+
+	<style>
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: #d4edda;
+      color: #155724;
+      padding: 15px 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      font-family: sans-serif;
+      font-size: 16px;
+      opacity: 0;
+      transform: translateX(100%);
+      transition: all 0.5s ease;
+      z-index: 9999;
+    }
+
+    .notification.show {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+	.notification-error {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: red;
+      color: #fff;
+      padding: 15px 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      font-family: sans-serif;
+      font-size: 16px;
+      opacity: 0;
+      transform: translateX(100%);
+      transition: all 0.5s ease;
+      z-index: 9999;
+    }
+
+    .notification-error.show {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  </style>
 </head>
 
 <body class="">
@@ -69,9 +118,9 @@
 					<li class="nav-item pcoded-hasmenu">
 						<a href="#!" class="nav-link"><span class="pcoded-micon"><i class="feather icon-box"></i></span><span class="pcoded-mtext">Reports</span></a>
 						<ul class="pcoded-submenu">
-						<li class=""><a href="{{route('board.index')}}" class="">School Registration </a></li>
-						<li class=""><a href="{{route('board.index')}}" class="">Technical Assesment </a></li>
-							<li class=""><a href="{{route('designation.index')}}" class="">Payment Transactions </a></li>							
+						<li class=""><a href="#" class="">School Registration </a></li>
+						<li class=""><a href="#" class="">Technical Assesment </a></li>
+							<li class=""><a href="#" class="">Payment Transactions </a></li>							
 							<li class=""><a href="{{route('title.index')}}" class="">Student Login Details</a></li>
 							<!-- <li class=""><a href="bc_collapse.html" class="">Collapse</a></li>
 							<li class=""><a href="bc_progress.html" class="">Progress</a></li>
@@ -81,7 +130,7 @@
 					</li>
 
 					<li class="nav-item">
-						<a href="{{route('manage.school')}}" class="nav-link"><span class="pcoded-micon"><i class="feather icon-file-text"></i></span><span class="pcoded-mtext">Manage Users</span></a>
+						<a href="#" class="nav-link"><span class="pcoded-micon"><i class="feather icon-file-text"></i></span><span class="pcoded-mtext">Manage Users</span></a>
 					</li>
 
 					<li class="nav-item pcoded-hasmenu">
@@ -91,6 +140,9 @@
 							<li class=""><a href="{{route('board.index')}}" class="">Manage Board</a></li>
 							<li class=""><a href="{{route('title.index')}}" class="">Manage Title</a></li>
 							<li class=""><a href="{{route('title.index')}}" class="">Settings</a></li>
+							<li class="" {{ request()->routeIs('class.index') ? 'active' : '' }}><a href="{{route('class.index')}}" class="">Class</a></li>
+							<li class="" {{ request()->routeIs('subject.index') ? 'active' : '' }}><a href="{{route('subject.index')}}" class="">Map Subject</a></li>
+							<li class="" {{ request()->routeIs('exam.date') ? 'active' : '' }}><a href="{{route('exam.date')}}" class="">Exam Date</a></li>
 							<!-- <li class=""><a href="bc_collapse.html" class="">Collapse</a></li>
 							<li class=""><a href="bc_progress.html" class="">Progress</a></li>
 							<li class=""><a href="bc_tabs.html" class="">Tabs & pills</a></li>
@@ -98,10 +150,10 @@
 						</ul>
 					</li>
 					<li class="nav-item">
-						<a href="{{route('manage.school')}}" class="nav-link"><span class="pcoded-micon"><i class="feather icon-file-text"></i></span><span class="pcoded-mtext">Change Password</span></a>
+						<a href="#" class="nav-link"><span class="pcoded-micon"><i class="feather icon-file-text"></i></span><span class="pcoded-mtext">Change Password</span></a>
 					</li>
 					<li class="nav-item">
-						<a href="{{route('manage.school')}}" class="nav-link"><span class="pcoded-micon"><i class="feather icon-file-text"></i></span><span class="pcoded-mtext">Logout</span></a>
+						<a href="#" class="nav-link"><span class="pcoded-micon"><i class="feather icon-file-text"></i></span><span class="pcoded-mtext">Logout</span></a>
 					</li>
 					
 					<!-- <li class="nav-item">
@@ -162,88 +214,7 @@
 			<a href="#!" class="mob-toggler"></a>
 		
 			<ul class="navbar-nav ml-auto">
-				<li>
-					<div class="dropdown">
-						<a class="dropdown-toggle" href="#" data-toggle="dropdown"><i class="icon feather icon-bell"></i></a>
-						<div class="dropdown-menu dropdown-menu-right notification">
-							<div class="noti-head">
-								<h6 class="d-inline-block m-b-0">Notifications</h6>
-								<div class="float-right">
-									<a href="#!" class="m-r-10">mark as read</a>
-									<a href="#!">clear all</a>
-								</div>
-							</div>
-							<ul class="noti-body">
-								<li class="n-title">
-									<p class="m-b-0">NEW</p>
-								</li>
-								<li class="notification">
-									<div class="media">
-										<img class="img-radius" src="../assets/images/user/avatar-1.jpg" alt="Generic placeholder image">
-										<div class="media-body">
-											<p><strong>John Doe</strong><span class="n-time text-muted"><i class="icon feather icon-clock m-r-10"></i>5 min</span></p>
-											<p>New ticket Added</p>
-										</div>
-									</div>
-								</li>
-
-					 
-
-								<li class="n-title">
-									<p class="m-b-0">EARLIER</p>
-								</li>
-								<li class="notification">
-									<div class="media">
-										<img class="img-radius" src="../assets/images/user/avatar-2.jpg" alt="Generic placeholder image">
-										<div class="media-body">
-											<p><strong>Joseph William</strong><span class="n-time text-muted"><i class="icon feather icon-clock m-r-10"></i>10 min</span></p>
-											<p>Prchace New Theme and make payment</p>
-										</div>
-									</div>
-								</li>
-								<li class="notification">
-									<div class="media">
-										<img class="img-radius" src="../assets/images/user/avatar-3.jpg" alt="Generic placeholder image">
-										<div class="media-body">
-											<p><strong>Sara Soudein</strong><span class="n-time text-muted"><i class="icon feather icon-clock m-r-10"></i>12 min</span></p>
-											<p>currently login</p>
-										</div>
-									</div>
-								</li>
-								<li class="notification">
-									<div class="media">
-										<img class="img-radius" src="../assets/images/user/avatar-1.jpg" alt="Generic placeholder image">
-										<div class="media-body">
-											<p><strong>Joseph William</strong><span class="n-time text-muted"><i class="icon feather icon-clock m-r-10"></i>30 min</span></p>
-											<p>Prchace New Theme and make payment</p>
-										</div>
-									</div>
-								</li>
-								<li class="notification">
-									<div class="media">
-										<img class="img-radius" src="../assets/images/user/avatar-3.jpg" alt="Generic placeholder image">
-										<div class="media-body">
-											<p><strong>Sara Soudein</strong><span class="n-time text-muted"><i class="icon feather icon-clock m-r-10"></i>1 hour</span></p>
-											<p>currently login</p>
-										</div>
-									</div>
-								</li>
-								<li class="notification">
-									<div class="media">
-										<img class="img-radius" src="../assets/images/user/avatar-1.jpg" alt="Generic placeholder image">
-										<div class="media-body">
-											<p><strong>Joseph William</strong><span class="n-time text-muted"><i class="icon feather icon-clock m-r-10"></i>2 hour</span></p>
-											<p>Prchace New Theme and make payment</p>
-										</div>
-									</div>
-								</li>
-							</ul>
-							<div class="noti-footer">
-								<a href="#!">show all</a>
-							</div>
-						</div>
-					</div>
-				</li>
+				 
 				<li>
 					<div class="dropdown drp-user">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -253,25 +224,18 @@
 							<div class="pro-head">
 								<img src="../assets/images/user/avatar-1.jpg" class="img-radius" alt="User-Profile-Image">
 								<span>John Doe</span>
-								<form method="POST" action="{{ route('logout') }}">
-                            @csrf
+								 
 
-							<form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                        
-								<a href="route('logout')"
-                                    onclick="event.preventDefault();
-                                                this.closest('form').submit();" class="dud-logout" title="Logout">
-									<i class="feather icon-log-out"></i>
-								</a>
-								</form>
-							</div>
-							<ul class="pro-body">
-								<li><a href="#!" class="dropdown-item"><i class="feather icon-settings"></i> Settings</a></li>
-								<li><a href="#!" class="dropdown-item"><i class="feather icon-user"></i> Profile</a></li>
-								<li><a href="message.html" class="dropdown-item"><i class="feather icon-mail"></i> My Messages</a></li>
-								<li><a href="auth-signin.html" class="dropdown-item"><i class="feather icon-lock"></i> Lock Screen</a></li>
-							</ul>
+								<form method="POST" action="{{ route('logout') }}">
+								@csrf
+							
+									<a href="route('logout')"
+										onclick="event.preventDefault();
+													this.closest('form').submit();" class="dud-logout" title="Logout">
+										<i class="feather icon-log-out"></i>
+									</a>
+									</form>
+							</div>							 
 						</div>
 					</div>
 				</li>
@@ -280,7 +244,17 @@
 	</header>
 	<!-- [ Header ] end -->
 	@yield('content')
+	@if(session('success'))
+        <div id="successPopup" class="notification">
+            ✅ {{ session('success') }}
+        </div>
+	@endif
 
+	@if(session('error'))
+    <div id="successPopup" class="notification-error">
+        ❌ {{ session('error') }}
+    </div>
+	@endif
 
 	<!-- Warning Section start -->
 	<!-- Older IE warning message -->
@@ -332,7 +306,31 @@
 	<!-- Required Js -->
 	<script src="{{asset('admin/js/vendor-all.min.js')}}"></script>
 	<script src="{{asset('admin/plugins/bootstrap/js/bootstrap.min.js')}}"></script>
-	
+	<script src="{{asset('admin/js/pcoded.min.js')}}"></script>
+	<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+
+	<script>
+  window.onload = function() {
+    const popup = document.getElementById("successPopup");
+    popup.classList.add("show");
+
+    // Auto-hide after 3 seconds (optional)
+    setTimeout(() => {
+      popup.classList.remove("show");
+    }, 3000);
+  };
+</script>
+
+<script>
+  $(document).ready(function() {
+    $('.class-select').select2({
+      placeholder: "--Select classes--",
+      allowClear: true
+    });
+  });
+</script>
 
 </body>
 

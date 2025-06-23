@@ -41,7 +41,7 @@
                                 <i class="fa fa-info text-black ms-1 information"
                                     data-bs-toggle="tooltip"
                                     data-bs-placement="right"
-                                    title="Choose Board eg ICSE, CBSE, etc.">
+                                    title="Select the educational board your school is affiliated with, such as CBSE, ICSE, or State Board.">
                                 </i>
                             </label>
                             <div class="d-flex justify-content-between">
@@ -61,7 +61,7 @@
                                 <i class="fa fa-info text-black ms-1 information"
                                     data-bs-toggle="tooltip"
                                     data-bs-placement="right"
-                                    title="Enter Your School Name">
+                                    title="Please enter the full official name of your school as it appears on records.">
                                 </i>
                             </label>
                             <input type="text" class="form-control" id="school_name" name="school_name"
@@ -73,11 +73,17 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
+                                    <label for="city-dropdown" class="form-label">Village/Town/City*</label>
+                                    <input type="text" class="form-control" name="city_id" placeholder="Village/Town/City" @if(!empty($school)) value="{{ $school->city_id }}" @endif required />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
                                     <label for="state-dropdown" class="form-label">State*</label>
                                     <select name="state_id" id="state-dropdown" class="form-select" required>
                                         <option value="">Select State</option>
                                         @foreach ($states as $state)
-                                            <option value="{{ $state->state_id }}" @if(!empty($school)) @if($school->state_id) selected @endif @endif>{{ $state->state_title }}</option>
+                                        <option value="{{ $state->state_id }}" @if(!empty($school)) @if($school->state_id == $state->state_id) selected @endif @endif>{{ $state->state_title }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -91,12 +97,6 @@
                                             <option value="{{ $city->districtid }}" selected>{{ $city->district_title }}</option>
                                         @endforeach
                                     </select>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="city-dropdown" class="form-label">Village/Town/City*</label>
-                                    <input type="text" class="form-control" name="city_id" placeholder="Village/Town/City" @if(!empty($school)) value="{{ $school->city_id }}" @endif required />
                                 </div>
                             </div>
                             <div class="col-md-6">

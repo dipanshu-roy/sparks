@@ -1,5 +1,6 @@
 @extends('web.layouts.app')
 @section('content')
+
 <div class="page-title">
     <div class="heading">
         <div class="container">
@@ -54,6 +55,7 @@
                                 <div class="mb-3">
                                     <label for="first_name" class="form-label">First Name*</label>
                                     <input type="text" class="form-control" name="first_name" id="first_name" @if(!empty($head_of_school)) value="{{ $head_of_school->first_name }}" @endif required placeholder="Enter First Name">
+                                    <div id="first_name_error" class="font-size-12 mt-1 small text-danger"></div>
                                 </div>
                             </div>
                             <div class="col-md-3 col-6">
@@ -63,12 +65,14 @@
                                     @error('second_name')
                                         <div class="text-danger">{{ $message }}</div>
                                     @enderror
+                                    <div id="second_name_error" class="font-size-12 mt-1 small text-danger"></div>
                                 </div>
                             </div>
                             <div class="col-md-3 col-6">
                                 <div class="mb-3">
                                     <label for="last_name" class="form-label">Last Name*</label>
                                     <input type="text" class="form-control" name="last_name" id="third" @if(!empty($head_of_school)) value="{{ $head_of_school->last_name }}" @endif placeholder="Enter Last Name" required>
+                                    <div id="third_error" class="font-size-12 mt-1 small text-danger"></div>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -83,11 +87,11 @@
                                     <input type="text" class="form-control" name="mobile" id="mobile" @if(!empty($head_of_school)) value="{{ $head_of_school->mobile }}" @endif placeholder="Enter Mobile Number" pattern="^[1-9][0-9]{9}$" maxlength="10" minlength="10" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" {{ isset($head_of_school) && $head_of_school->is_mobile_validate == 1 ? 'readonly' : '' }} required>
                                     @if(empty($head_of_school->is_mobile_validate))
                                         <span id="verifyMobile" class="text-info cursor-pointer mt-1 float-end"><small>Verify</small></span>
-                                        <div id="mobileStatus" class="font-size-12 mt-1 small"></div>
+                                        <div id="mobileStatus" class="font-size-12 mt-1 small text-danger"></div>
                                         <div id="mobileOtpWrapper" class="mt-2 d-none">
                                             <input type="text" id="mobileOtp" class="form-control mt-1" placeholder="Enter OTP">
                                             <button type="button" class="btn btn-success btn-sm mt-1" id="verifyMobileOtp" style="display:none">Verify OTP</button>
-                                            <div id="mobileStatus" class="small mt-1"></div>
+                                            <!-- <div id="mobileStatus" class="small mt-1"></div> -->
                                         </div>
                                     @endif
                                 </div>
@@ -104,11 +108,11 @@
                                     <input type="email" class="form-control" name="email" id="email" @if(!empty($head_of_school)) value="{{ $head_of_school->email }}" @endif placeholder="Enter Email Address" {{ isset($head_of_school) && $head_of_school->is_validate == 1 ? 'readonly' : '' }} required>
                                     @if(empty($head_of_school->is_validate))
                                         <span id="verifyEmail" class="text-info cursor-pointer mt-1 float-end"><small>Verify</small></span>
-                                        <div id="emailStatus" class="font-size-12 mt-1 small"></div>
+                                        <div id="emailStatus" class="font-size-12 mt-1 small text-danger"></div>
                                         <div id="emailOtpWrapper" class="mt-2 d-none">
                                             <input type="text" id="emailOtp" class="form-control mt-1" placeholder="Enter OTP">
                                             <button type="button" class="btn btn-success btn-sm mt-1" id="verifyEmailOtp" style="display:none">Verify OTP</button>
-                                            <div id="emailStatus" class="small mt-1"></div>
+                                            <!-- <div id="emailStatus" class="small mt-1"></div> -->
                                         </div>
                                     @endif
                                 </div>
@@ -131,12 +135,13 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="row mb-3">
                             <div class="col-sm-4 mb-3">
                                 <a href="{{ route('school.create') }}" class="btn btn-outline-primary w-100"><i class="fa fa-arrow-left"></i> Back</a>
                             </div>
                             <div class="col-sm-8">
-                                <button type="submit" class="btn btn-primary w-100">Save & Proceed <i class="fa fa-arrow-right"></i></button>
+                                <button type="submit" id="submit-btn" class="btn btn-primary w-100">Save & Proceed <i class="fa fa-arrow-right"></i></button>
                             </div>
                         </div>
                     </form>
@@ -151,77 +156,66 @@
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
     <script>
         document.getElementById('register_head').addEventListener('submit', function(e) {
             e.preventDefault();
-            @if(!empty($head_of_school))
-                @if($head_of_school->is_mobile_validate==0 && $head_of_school->is_validate==0)
-                    var title = "Mobile Number and Email Not Verified";
-                    var decription = "Do you want to proceed without verifying your mobile number and email address?";
-                @elseif($head_of_school->is_validate==0)
-                    var title = "Email Not Verified";
-                    var decription = "Do you want to proceed without verifying your email address?";
-                @elseif($head_of_school->is_mobile_validate==0)
-                    var title = "Mobile Number Not Verified";
-                    var decription = "Do you want to proceed without verifying your mobile number?";
-                @else
-                this.submit();
-                @endif
-            @else
-                var title = "Mobile Number and Email Not Verified";
-                var decription = "Do you want to proceed without verifying your mobile number and email address?";
-            @endif
-            Swal.fire({
-                title: title,
-                text: decription,
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#6c757d',
-                confirmButtonText: 'Yes',
-                cancelButtonText: 'No'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    this.submit();
+            const form = this;
+            $.ajax({
+                url: "{{ url('check-verified-data') }}",
+                type: 'GET',
+                beforeSend: function () {
+                    showloader();
+                },
+                success: function (response) {
+                    if (response.status === 200) {
+                        form.submit();
+                    } else {
+                        Swal.fire({
+                            title: response.title,
+                            text: response.decription,
+                            icon: 'question',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#6c757d',
+                            confirmButtonText: 'Yes',
+                            cancelButtonText: 'No'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                form.submit();
+                            }
+                        });
+                    }
+                },
+                error: function () {
+                    alert("Something went wrong while checking verification.");
+                },
+                complete: function () {
+                    hideloader()
                 }
             });
         });
         document.addEventListener('DOMContentLoaded', function() {
             const oldStateId = '{{ old('designation') }}';
             if (oldStateId) {
-                // Trigger change to load districts if state was previously selected
                 document.getElementById('designation-dropdown').value = oldStateId;
                 fetchDistricts(oldStateId, oldDistrictId);
             }
-
             document.getElementById('state-dropdown').addEventListener('change', function() {
                 fetchDistricts(this.value);
             });
         });
-
         document.addEventListener('DOMContentLoaded', function() {
             const oldStateId = '{{ old('title_id') }}';
             if (oldStateId) {
-                // Trigger change to load districts if state was previously selected
                 document.getElementById('title_id').value = oldStateId;
                 fetchDistricts(oldStateId, oldDistrictId);
             }
-
             document.getElementById('state-dropdown').addEventListener('change', function() {
                 fetchDistricts(this.value);
             });
         });
     </script>
-    <script>
-        document.getElementById('mobile').addEventListener('input', function (e) {
-            let value = e.target.value.replace(/\D/g, ''); // Remove non-digits
-            if (value.length > 0 && value.charAt(0) === '0') {
-                value = value.slice(1);
-            }
-            e.target.value = value.slice(0, 10);
-        });
-    </script>
+    
 <script>
 $(document).ready(function () {
     $('#verifyMobile').on('click', function () {
@@ -239,6 +233,9 @@ $(document).ready(function () {
                 page: 'head-of-school-info',
                 _token: '{{ csrf_token() }}'
             },
+            beforeSend: function () {
+                showloader();
+            },
             success: function (res) {
                 if (res.status === 'ok') {
                     mobileStatus.text('OTP sent to your mobile number.').removeClass('text-danger').addClass('text-success');
@@ -249,6 +246,9 @@ $(document).ready(function () {
             },
             error: function () {
                 mobileStatus.text('Something went wrong while sending OTP.').removeClass('text-success').addClass('text-danger');
+            },
+            complete: function () {
+                hideloader()
             }
         });
     });
@@ -270,6 +270,9 @@ $(document).ready(function () {
                 otp: otp,
                 _token: '{{ csrf_token() }}'
             },
+            beforeSend: function () {
+                showloader();
+            },
             success: function (res) {
                 if (res.status === 'ok') {
                     mobileStatus.text('Mobile number verified successfully').removeClass('text-danger').addClass('text-success');
@@ -277,15 +280,15 @@ $(document).ready(function () {
                     $('#mobileOtpWrapper').addClass('d-none');
                     $('#mobile').prop('readonly', true);
                     $('#verifyMobile').addClass('d-none');
-                    setTimeout(() => {
-                        location.reload();
-                    },1000);
                 } else {
                     mobileStatus.text('Invalid OTP').removeClass('text-success').addClass('text-danger');
                 }
             },
             error: function () {
                 mobileStatus.text('OTP verification failed.').removeClass('text-success').addClass('text-danger');
+            },
+            complete: function () {
+                hideloader()
             }
         });
     });
@@ -326,6 +329,9 @@ $(document).ready(function () {
                 page: 'head-of-school-info',
                 _token: '{{ csrf_token() }}'
             },
+            beforeSend: function () {
+                showloader();
+            },
             success: function (res) {
                 if (res.status === 'ok') {
                     emailStatus.text('OTP sent to your email address.').removeClass('text-danger').addClass('text-success');
@@ -336,6 +342,9 @@ $(document).ready(function () {
             },
             error: function () {
                 emailStatus.text('Something went wrong while sending OTP.').removeClass('text-success').addClass('text-danger');
+            },
+            complete: function () {
+                hideloader()
             }
         });
     });
@@ -357,6 +366,9 @@ $(document).ready(function () {
                 otp: otp,
                 _token: '{{ csrf_token() }}'
             },
+            beforeSend: function () {
+                showloader();
+            },
             success: function (res) {
                 if (res.status === 'ok') {
                     emailStatus.text('Email verified successfully').removeClass('text-danger').addClass('text-success');
@@ -364,15 +376,15 @@ $(document).ready(function () {
                     $('#emailOtpWrapper').addClass('d-none');
                     $('#email').prop('readonly', true);
                     $('#verifyEmail').addClass('d-none');
-                    setTimeout(() => {
-                        location.reload();
-                    },1000);
                 } else {
                     emailStatus.text('Invalid OTP').removeClass('text-success').addClass('text-danger');
                 }
             },
             error: function () {
                 emailStatus.text('OTP verification failed.').removeClass('text-success').addClass('text-danger');
+            },
+            complete: function () {
+                hideloader()
             }
         });
     });
@@ -392,8 +404,76 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+
+document.getElementById("first_name").addEventListener("input", function () {
+    const first_name = this.value;
+    const first_name_error = document.getElementById("first_name_error");
+    const errorMsg = "Name must be at least 2 characters long and cannot start with a number";
+    if (/^\d/.test(first_name) || first_name.length < 2) {
+        first_name_error.textContent = errorMsg;
+        this.classList.add("is-invalid");
+    } else {
+        first_name_error.textContent = "";
+        this.classList.remove("is-invalid");
+    }
+})
+document.getElementById("third").addEventListener("input", function () {
+    const third = this.value;
+    const third_error = document.getElementById("third_error");
+    const errorMsg = "Last Name must be at least 2 characters long and cannot start with a number";
+    if (/^\d/.test(third) || third.length < 2) {
+        third_error.textContent = errorMsg;
+        this.classList.add("is-invalid");
+    } else {
+        third_error.textContent = "";
+        this.classList.remove("is-invalid");
+    }
+})
+document.getElementById('mobile').addEventListener('input', function () {
+    const input = this.value.trim();
+    const errorDiv = document.getElementById('mobileStatus');
+    const submitBtn = document.getElementById('submit-btn');
+
+    const mobileRegex = /^[1-9][0-9]{9}$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+    errorDiv.innerText = '';
+    submitBtn.disabled = true;
+    if (input === '') {
+        errorDiv.innerText = 'Mobile number is required.';
+    } else if (input.startsWith('+91')) {
+        errorDiv.innerText = 'Remove +91. Enter 10-digit mobile only.';
+    } else if (mobileRegex.test(input)) {
+        submitBtn.disabled = false;
+    } else {
+        errorDiv.innerText = 'Enter a valid 10-digit mobile (not starting with 0) or valid email.';
+    }
+});
+document.getElementById('email').addEventListener('input', function () {
+    const input = this.value.trim();
+    const errorDiv = document.getElementById('emailStatus');
+    const submitBtn = document.getElementById('submit-btn');
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/; // Simple email pattern
+
+    errorDiv.innerText = '';
+    submitBtn.disabled = true;
+
+    if (input === '') {
+        errorDiv.innerText = 'Email ID is required.';
+    } else if (emailRegex.test(input)) {
+        submitBtn.disabled = false;
+    } else {
+        errorDiv.innerText = 'Please enter a valid email address.';
+    }
+});
+function showloader(){
+    const preloader = document.querySelector('#preloader');
+    preloader.style.display = 'flex';
+}
+function hideloader(){
+    const preloader = document.querySelector('#preloader');
+    preloader.style.display = 'none';
+}
 </script>
-
-
-
 @endpush

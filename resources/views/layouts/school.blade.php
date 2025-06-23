@@ -20,14 +20,65 @@
 	<meta name="author" content="Codedthemes" />
 
 	<!-- Favicon icon -->
-	<link rel="icon" href="{{asset('admin/images/favicon.ico')}}" type="image/x-icon">
+	<link href="{{ asset('web/assets/img/favicon.png') }}" rel="icon">
+    <link href="{{ asset('web/assets/img/apple-touch-icon.png') }}" rel="apple-touch-icon">
 	<!-- fontawesome icon -->
-	<link rel="stylesheet" href="{{asset('admin/fontawesome/css/fontawesome-all.min.css')}}">
+	<!-- <link rel="stylesheet" href="{{asset('admin/fontawesome/css/fontawesome-all.min.css')}}"> -->
 	<!-- animation css -->
 	<link rel="stylesheet" href="{{asset('admin/plugins/animation/css/animate.min.css')}}">
-
+ 
 	<!-- vendor css -->
 	<link rel="stylesheet" href="{{asset('admin/css/style.css')}}">
+	<style>
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: #d4edda;
+      color: #155724;
+      padding: 15px 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      font-family: sans-serif;
+      font-size: 16px;
+      opacity: 0;
+      transform: translateX(100%);
+      transition: all 0.5s ease;
+      z-index: 9999;
+    }
+
+    .notification.show {
+      opacity: 1;
+      transform: translateX(0);
+    }
+	.school-logo{
+			width:50px;
+			height:50px;
+	}
+
+	
+	.notification-error {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: red;
+      color: #fff;
+      padding: 15px 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      font-family: sans-serif;
+      font-size: 16px;
+      opacity: 0;
+      transform: translateX(100%);
+      transition: all 0.5s ease;
+      z-index: 9999;
+    }
+
+    .notification-error.show {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  </style>
 </head>
 
 <body class="">
@@ -43,85 +94,55 @@
 	<nav class="pcoded-navbar menupos-fixed menu-light brand-blue ">
 		<div class="navbar-wrapper ">
 			<div class="navbar-brand header-logo">
-				<a href="{{route('dashboard')}}" class="b-brand">
+				<a href="{{route('school.dashboard')}}" class="b-brand">
 					<img src="{{asset('web/logo.svg')}}" alt="" class="logo images"> 
 				</a>
 				<a class="mobile-menu" id="mobile-collapse" href="#!"><span></span></a>
 			</div>
 			<div class="navbar-content scroll-div">
 				<ul class="nav pcoded-inner-navbar">
-					<li class="nav-item pcoded-menu-caption">
-						<label>Navigation</label>
-					</li>
-					<li class="nav-item">
-						<a href="{{route('dashboard')}}" class="nav-link"><span class="pcoded-micon"><i class="feather icon-home"></i></span><span class="pcoded-mtext">Dashboard</span></a>
-					</li>
-					<!-- <li class="nav-item pcoded-menu-caption">
-						<label>UI Element</label>
-					</li> -->
 					
-					<!-- <li class="nav-item pcoded-menu-caption">
-						<label>Forms &amp; table</label>
-					</li> -->
-					<li class="nav-item">
-						<a href="{{route('manage.school')}}" class="nav-link"><span class="pcoded-micon"><i class="feather icon-file-text"></i></span><span class="pcoded-mtext">Profile</span></a>
+					<li class="nav-item {{ request()->routeIs('school.dashboard') ? 'active' : '' }}">
+						<a href="{{route('school.dashboard')}}" class="nav-link"><span class="pcoded-micon "><i class="feather icon-home"></i></span><span class="pcoded-mtext">Dashboard</span></a>
 					</li>
-					<li class="nav-item">
-						<a href="{{route('manage.school')}}" class="nav-link"><span class="pcoded-micon"><i class="feather icon-file-text"></i></span><span class="pcoded-mtext">Technical Assesment</span></a>
-					</li>
-					<li class="nav-item">
-						<a href="{{route('manage.school')}}" class="nav-link"><span class="pcoded-micon"><i class="feather icon-file-text"></i></span><span class="pcoded-mtext">Share Link</span></a>
-					</li>
-					<li class="nav-item">
-						<a href="{{route('manage.school')}}" class="nav-link"><span class="pcoded-micon"><i class="feather icon-file-text"></i></span><span class="pcoded-mtext">Student Verification </span></a>
+				 
+					<li class="nav-item {{ request()->routeIs('school.profile') ? 'active' : '' }}">
+						<a href="{{route('school.profile')}}" class="nav-link"><span class="pcoded-micon"><i class="feather icon-file-text"></i></span><span class="pcoded-mtext">Profile</span></a>
 					</li>
 
-					<li class="nav-item">
-						<a href="{{route('manage.school')}}" class="nav-link"><span class="pcoded-micon"><i class="feather icon-file-text"></i></span><span class="pcoded-mtext"> Change Password</span></a>
-					</li>
+					
 
-
-					<li class="nav-item">
-						<a href="{{route('manage.school')}}" class="nav-link"><span class="pcoded-micon"><i class="feather icon-file-text"></i></span><span class="pcoded-mtext">Logout </span></a>
-					</li>
-
-					<!-- <li class="nav-item">
-						<a href="form_elements.html" class="nav-link"><span class="pcoded-micon"><i class="feather icon-file-text"></i></span><span class="pcoded-mtext">Form elements</span></a>
-					</li>
-					<li class="nav-item">
-						<a href="tbl_bootstrap.html" class="nav-link"><span class="pcoded-micon"><i class="feather icon-align-justify"></i></span><span class="pcoded-mtext">Bootstrap table</span></a>
-					</li>
-					<li class="nav-item pcoded-menu-caption">
-						<label>Chart & Maps</label>
-					</li>
-					<li class="nav-item">
-						<a href="chart-morris.html" class="nav-link"><span class="pcoded-micon"><i class="feather icon-pie-chart"></i></span><span class="pcoded-mtext">Chart</span></a>
-					</li>
-					<li class="nav-item">
-						<a href="map-google.html" class="nav-link"><span class="pcoded-micon"><i class="feather icon-map"></i></span><span class="pcoded-mtext">Maps</span></a>
-					</li>
-					<li class="nav-item pcoded-menu-caption">
-						<label>Pages</label>
-					</li> -->
-					<!-- <li class="nav-item pcoded-hasmenu">
-						<a href="#!" class="nav-link"><span class="pcoded-micon"><i class="feather icon-lock"></i></span><span class="pcoded-mtext">Authentication</span></a>
+					<li class="nav-item pcoded-hasmenu">
+						<a href="#!" class="nav-link"><span class="pcoded-micon"><i class="feather icon-box"></i></span><span class="pcoded-mtext">Computer Requirements</span></a>
 						<ul class="pcoded-submenu">
-							<li class=""><a href="auth-signup.html" class="" target="_blank">Sign up</a></li>
-							<li class=""><a href="auth-signin.html" class="" target="_blank">Sign in</a></li>
+						<li class="nav-item {{ request()->routeIs('technical.assesment') ? 'active' : '' }}">
+						<a href="{{route('technical.assesment')}}">Technical Assesment</a></li>					
+						<li class=""><a href="#" class="">Computer Lab Certification</a></li>							 							 
 						</ul>
-					</li> -->
-					<!-- <li class="nav-item"><a href="sample-page.html" class="nav-link"><span class="pcoded-micon"><i class="feather icon-sidebar"></i></span><span class="pcoded-mtext">Sample page</span></a></li>
-					<li class="nav-item disabled"><a href="#!" class="nav-link"><span class="pcoded-micon"><i class="feather icon-power"></i></span><span class="pcoded-mtext">Disabled menu</span></a></li> -->
+					</li>
+
+
+
+
+					<li class="nav-item {{ request()->routeIs('school.share.link') ? 'active' : '' }}">
+						<a href="{{route('school.share.link')}}" class="nav-link"><span class="pcoded-micon"><i class="feather icon-file-text"></i></span><span class="pcoded-mtext">Share Link</span></a>
+					</li>
+					<li class="nav-item">
+						<a href="{{route('student.verification')}}" class="nav-link"><span class="pcoded-micon"><i class="feather icon-file-text"></i></span><span class="pcoded-mtext">Student Verification </span></a>
+					</li>
+
+					<li class="nav-item">
+						<a href="#" class="nav-link"><span class="pcoded-micon"><i class="feather icon-file-text"></i></span><span class="pcoded-mtext"> Change Password</span></a>
+					</li>
+
+
+					<li class="nav-item">
+						<a href="#" class="nav-link"><span class="pcoded-micon"><i class="feather icon-file-text"></i></span><span class="pcoded-mtext">Logout </span></a>
+					</li>
+
+					
 				</ul>
-				<!-- <div class="card text-center">
-					<div class="card-block">
-						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-						<i class="feather icon-sunset f-40"></i>
-						<h6 class="mt-3">Upgrade to pro</h6>
-						<p>upgrade for get full themes and 30min support</p>
-						<a href="https://codedthemes.com/item/flash-able-bootstrap-admin-template/" target="_blank" class="btn btn-gradient-primary btn-sm text-white m-0">Upgrade</a>
-					</div>
-				</div> -->
+			
 			</div>
 		</div>
 	</nav>
@@ -143,6 +164,11 @@
 			<a href="#!" class="mob-toggler"></a>
 			
 			<ul class="navbar-nav ml-auto">
+				<li>
+				@php
+					$user = Auth::guard('school')->user();
+				@endphp	
+				<img src="{{asset($user->image)}}" class="img-radius school-logo" ></li>
 				
 				<li>
 					<div class="dropdown drp-user">
@@ -152,7 +178,7 @@
 						<div class="dropdown-menu dropdown-menu-right profile-notification">
 							<div class="pro-head">
 								<img src="{{asset('admin/images/user/avatar-1.jpg')}}" class="img-radius" alt="User-Profile-Image">
-								<span>John Doe</span>
+								<!-- <span>John Doe</span> -->
 
 								<form method="POST" action="{{ route('school.logout') }}">
 								@csrf                        
@@ -179,6 +205,18 @@
 	<!-- [ Header ] end -->
 	@yield('content')
 
+	
+	@if(session('success'))
+        <div id="successPopup" class="notification">
+            ✅ {{ session('success') }}
+        </div>
+	@endif
+
+	@if(session('error'))
+    <div id="successPopup" class="notification-error">
+        ❌ {{ session('error') }}
+    </div>
+	@endif
 
 	<!-- Warning Section start -->
 	<!-- Older IE warning message -->
@@ -228,10 +266,26 @@
 	<!-- Warning Section Ends -->
 
 	<!-- Required Js -->
-	<script src="{{asset('admin/js/vendor-all.min.js')}}"></script>
-	<script src="{{asset('admin/plugins/bootstrap/js/bootstrap.min.js')}}"></script>
 	
 
+
+	<script src="{{asset('admin/js/vendor-all.min.js')}}"></script>
+	<script src="{{asset('admin/plugins/bootstrap/js/bootstrap.min.js')}}"></script>
+	<script src="{{asset('admin/js/pcoded.min.js')}}"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	@stack('scripts')
+	<script>
+  window.onload = function() {
+    const popup = document.getElementById("successPopup");
+    popup.classList.add("show");
+
+    // Auto-hide after 3 seconds (optional)
+    setTimeout(() => {
+      popup.classList.remove("show");
+    }, 3000);
+  };
+</script>
 </body>
 
 </html>

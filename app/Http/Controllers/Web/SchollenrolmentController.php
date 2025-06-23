@@ -73,9 +73,15 @@ class SchollenrolmentController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Schoolenrolment $schoolenrolment)
+    public function edit(Request $request,$id)
     {
-        //
+        
+        $school = \App\Models\LabsDetails::findOrFail($id);        
+        $school->labs_name    = $request->labs_name;
+        $school->computer_qty = $request->computer_qty;         
+        $school->save();            
+
+        return redirect()->back()->with('success', 'Lab details update successfully.');
     }
 
     /**

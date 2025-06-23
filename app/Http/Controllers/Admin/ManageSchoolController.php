@@ -34,7 +34,7 @@ class ManageSchoolController extends Controller
         'd.registration_id as dregistration_id',
         'e.registration_id as eregistration_id',
         'f.registration_id as fregistration_id'
-        )->orderBy('a.id','DESC')->groupBy('a.id')->get();
+        )->orderBy('a.id','DESC')->groupBy('a.id','DESC')->get();
 
         return view('admin.manage_school.view',compact('data'));
     }

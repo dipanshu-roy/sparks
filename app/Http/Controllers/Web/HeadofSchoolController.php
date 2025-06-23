@@ -27,6 +27,8 @@ class HeadofSchoolController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+
+
     public function store(Request $request)
     {
         if(isset($request->mobile)){
@@ -59,20 +61,33 @@ class HeadofSchoolController extends Controller
         ], [
             'mobile.required' => 'Invalid mobile number.',
         ]);
-        $data = [
-            'title_id'        => $request->title_id,
-            'first_name'      => $request->first_name,
-            'last_name'       => $request->last_name,
-            'second_name'     => $request->second_name,
-            'email'           => $request->email,
-            'mobile'          => $request->mobile,
-            'designation'     => $request->designation,
-        ];
-        Headofschool::updateOrCreate(
-            ['registration_id' => $request->registration_id],
-            $data
-        );
-        return redirect()->route('spark.cordinator')->with('success', "Head of school registered successfully.");
+        if(isset($request->registration_id_from_admin)){
+            $up_school = Headofschool::where('registration_id',$request->registration_id_from_admin)->first();            
+            $up_school->title_id           = $request->title_id;
+            $up_school->first_name         = $request->first_name;
+            $up_school->last_name          = $request->last_name;
+            $up_school->second_name        = $request->second_name;
+            $up_school->email              = $request->email;
+            $up_school->mobile             = $request->mobile;
+            $up_school->designation        = $request->designation; 
+            $up_school->save();    
+            return redirect()->back()->with('success', "Update Head of school Successfully");
+        }else{
+            $data = [
+                'title_id'        => $request->title_id,
+                'first_name'      => $request->first_name,
+                'last_name'       => $request->last_name,
+                'second_name'     => $request->second_name,
+                'email'           => $request->email,
+                'mobile'          => $request->mobile,
+                'designation'     => $request->designation,
+            ];
+            Headofschool::updateOrCreate(
+                ['registration_id' => $request->registration_id],
+                $data
+            );
+            return redirect()->route('spark.cordinator')->with('success', "Head of school registered successfully.");
+        }
     }
 
     /**

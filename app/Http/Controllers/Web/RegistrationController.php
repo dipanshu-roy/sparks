@@ -10,6 +10,7 @@ use App\Models\District;
 use App\Models\City;
 use Illuminate\Support\Facades\Mail; // for email
 use Illuminate\Support\Facades\Session;
+
  
 class RegistrationController extends Controller
 {
@@ -43,17 +44,12 @@ class RegistrationController extends Controller
 
             $check_exist = SchoolRegistration::where('mobileno',$request->mobileno)->first();
             if($check_exist){
-                
-                // Generate OTP
-                $otp = rand(100000, 999999);
-               // $otp = 12345;                        
+                $otp = rand(100000, 999999);                  
                 $schoolid = $check_exist->id;
-
-                 if (filter_var($check_exist->mobileno, FILTER_VALIDATE_EMAIL)) {
-                   
+                if (filter_var($check_exist->mobileno, FILTER_VALIDATE_EMAIL)) {
                     $email = $check_exist->mobileno;
                     $data['otp'] = $otp;
-                    $subject = 'Spark Olympiad - OTP';
+                    $subject = 'One-Time Password for Spark Olympiads';
                     try {
                         Mail::send('email_template.otp', $data, function($message) use ($email, $subject) {
                             $message->from('noreply.dipanshu.roy@gmail.com');
@@ -61,19 +57,26 @@ class RegistrationController extends Controller
                             $message->subject($subject);
                         });
                     } catch (\Exception $e) {
-                        return back()->withErrors(['mail' => 'Mail sending failed: ' . $e->getMessage()]);
+                        return response()->json([
+                            'status'            => 404,
+                            'error'             => 'Failed to send OTP email.',
+                            'message'           => $e->getMessage()
+                        ], 500);
                     }                      
-                      $this->save_opt($schoolid,$otp,$validate_details,$type);                  
-                      return redirect()->route('otp.verify.form')->with([
-                           'validate_details' => $validate_details,
-                           'success' => 'OTP sent successfully'
-                       ]);
+                    $this->save_opt($schoolid,$otp,$validate_details,$type);
+                    return response()->json([
+                        'status'            => 200,
+                        'validate_details'  => $validate_details,
+                        'route'             => route('otp.verify.form'),
+                        'message'           => 'OTP sent successfully',
+                    ]);
                 }elseif(preg_match('/^[0-9]{10,15}$/', $check_exist->mobileno)) {
-                     
-                      $this->save_opt($schoolid,$otp,$validate_details,$type);                  
-                     return redirect()->route('otp.verify.form')->with([
-                        'validate_details' => $validate_details,
-                        'success' => 'OTP sent successfully'
+                    $this->save_opt($schoolid,$otp,$validate_details,$type);  
+                    return response()->json([
+                        'status'            => 200,
+                        'validate_details'  => $validate_details,
+                        'route'             => route('otp.verify.form'),
+                        'message'           => 'OTP sent successfully',
                     ]);
                 }else{
                     return "dd";
@@ -85,7 +88,6 @@ class RegistrationController extends Controller
                 ]);
                 if($sc){ 
                     $schoolid = $sc->id;
-                    // Generate OTP
                    // $otp = rand(100000, 999999);
                     $otp = 12345;          
                    //$this->save_opt($schoolid,$otp,$validate_details,$type); 
@@ -94,7 +96,7 @@ class RegistrationController extends Controller
                    
                         $email = $request->mobileno;
                         $data['otp'] = $otp;
-                        $subject = 'Spark Olympiad - OTP';
+                        $subject = 'One-Time Password for Spark Olympiads';
                         try {
                             Mail::send('email_template.otp', $data, function($message) use ($email, $subject) {
                                 $message->from('noreply.dipanshu.roy@gmail.com');
@@ -102,19 +104,27 @@ class RegistrationController extends Controller
                                 $message->subject($subject);
                             });
                         } catch (\Exception $e) {
-                            return back()->withErrors(['mail' => 'Mail sending failed: ' . $e->getMessage()]);
+                            return response()->json([
+                                'status'            => 404,
+                                'error' => 'Failed to send OTP email.',
+                                'message' => $e->getMessage()
+                            ], 500);
                         }                      
-                          $this->save_opt($schoolid,$otp,$validate_details,$type);                  
-                          return redirect()->route('otp.verify.form')->with([
-                               'validate_details' => $validate_details,
-                               'success' => 'OTP sent successfully'
-                           ]);
+                        $this->save_opt($schoolid,$otp,$validate_details,$type);                  
+                        return response()->json([
+                            'status'            => 200,
+                            'validate_details'  => $validate_details,
+                            'route'             => route('otp.verify.form'),
+                            'message'           => 'OTP sent successfully',
+                        ]);
                     }elseif(preg_match('/^[0-9]{10,15}$/', $request->mobileno)) {
                          
-                          $this->save_opt($schoolid,$otp,$validate_details,$type);                  
-                         return redirect()->route('otp.verify.form')->with([
-                            'validate_details' => $validate_details,
-                            'success' => 'OTP sent successfully'
+                        $this->save_opt($schoolid,$otp,$validate_details,$type);                  
+                        return response()->json([
+                            'status'            => 200,
+                            'validate_details'  => $validate_details,
+                            'route'             => route('otp.verify.form'),
+                            'message'           => 'OTP sent successfully',
                         ]);
                     }else{
                         
@@ -124,14 +134,15 @@ class RegistrationController extends Controller
                         // ]);    
                     } 
                 }else{
-                    return redirect(route('school.create'))->with('error','Something went wrong'); 
-                    // return redirect()->back()->with('error','Something went wrong'); 
+                    return response()->json([
+                        'status'            => 404,
+                        'validate_details'  => '',
+                        'route'             => route('school.create'),
+                        'message'           => 'Something went wrong',
+                    ]);
                 }
             }                  
-            
         }
-         
-
     }
 
     public function shoot_otp($type){

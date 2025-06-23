@@ -25,40 +25,32 @@ class OtpVerifyController extends Controller
     {
         //
     }
-
     public function verifyOtp(Request $request){
-        
-        if (!is_null($request->validate_details)) {          
+        if (!is_null($request->mobileno)) {          
             $request->validate([
                 'otp' => 'required|numeric',
             ]);
             $request->session()->forget('schoolid');
             
-            $school = Otp::where('source',$request->validate_details)
+            $school = Otp::where('source',$request->mobileno)
             ->where('otp',$request->otp)
             ->where('status',0)->where('validate',0)->first();
             if(!$school){
-            // if($school->status !=0 && $school->validate !=0){
-                    return redirect()->back()->with('error', 'OTP Expire. Try again.');     
-            // }            
+                return response()->json(['status'=>404,'otp'=>'verify','message' => 'Invalid OTP. Try again.']);           
             }
-            
             if ($request->otp == $school->otp) {
-                
-                $schoolid = Otp::where('source',$request->validate_details)->where('status',0)->where('validate',0)->update([
+                $schoolid = Otp::where('source',$request->mobileno)->where('status',0)->where('validate',0)->update([
                     'status' => 1,
                     'validate' => 1
                 ]);
+
                 Session::put('schoolid', $school->registration_id);
-                return redirect()->route('school.create')->with('success', 'OTP Verified!');
+                return response()->json(['status'=>200,'otp'=>'verify','message' => 'OTP Verified!','route'=>route('school.create')]);
             }
-        
-            return redirect()->route('otp.verify.form')->with([
-                'validate_details' => $request->validate_details,
-                'error' => 'Invalid OTP. Try again.'
-            ]); 
-        }else{       
-            return redirect()->back()->with('error', 'Verification failed please go back and start again');
+            return response()->json(['status'=>404,'otp'=>'verify','message' => 'Invalid OTP. Try again']);
+        }else{
+
+            return response()->json(['status'=>404,'otp'=>'verify','message' => 'Verification failed please start again']);
         }
     }
 

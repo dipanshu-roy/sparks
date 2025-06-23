@@ -11,7 +11,7 @@ class SchoolRegistration extends Authenticatable
 {
     use HasFactory, Notifiable;
     protected $table = "school_registration";
-    protected $fillable = ['mobileno','gmail','type','password','school_id'];
+    protected $fillable = ['mobileno','gmail','type','password','school_id','image','fist_chanege_pass'];
 
 
 

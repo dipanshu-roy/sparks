@@ -1,6 +1,11 @@
 
 @extends('layouts.admin')
  @section('content')
+
+ <!-- DataTables CSS -->
+
+
+
  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
  <section class="pcoded-main-container">
         <div class="pcoded-wrapper">
@@ -36,7 +41,7 @@
                                         </div>
                                         <div class="card-body table-border-style">
                                             <div class="table-responsive">
-                                                <table class="table">
+                                            <table class="table" id="schoolTable">
                                                     <thead>
                                                         <tr>
                                                             <th>S.NO.</th>
@@ -120,3 +125,15 @@
 
 
  @endsection
+ @push('scripts')
+ <script>
+    $(document).ready(function() {
+        $('#schoolTable').DataTable({
+            responsive: true,
+            "pageLength": 10,
+            "order": [[ 0, "asc" ]], // Sort by first column (S.NO.)
+        });
+    });
+</script>
+
+@endpush

@@ -17,8 +17,10 @@ class Headofschool extends Model
         'designation',
         'registration_id',
         'is_validate',
-        'is_mobile_validate',
+        'is_mobile_validates',
+        'email_otp',
         'mobile_otp',
-        'email_otp'
+        
     ];
 }
+

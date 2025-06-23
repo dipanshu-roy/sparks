@@ -12,7 +12,7 @@
         <div class="card-body">
             <h1 class="text-success mb-4">🎉 Thank You!</h1>
             <p class="fs-4">Your registration has been successfully submitted.</p>
-            <a href="{{ route('students.create') }}" class="btn btn-primary mt-3">Register Another Student</a>
+            <!-- <a href="{{ route('students.create') }}" class="btn btn-primary mt-3">Register Another Student</a> -->
         </div>
     </div>
 </div>

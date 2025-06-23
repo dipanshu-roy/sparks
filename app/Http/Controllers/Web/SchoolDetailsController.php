@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\SchoolDetails;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Session;
 
 class SchoolDetailsController extends Controller
 {
@@ -29,6 +28,38 @@ class SchoolDetailsController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+    // public function store(Request $request)
+    // {
+    //          // Validate input
+    //          $request->validate([
+    //             //'registration_id' => 'required|string|max:255|unique:schools',
+    //             'board_id'        => 'required|integer',
+    //             'school_name'     => 'required|string|max:255',
+    //             'state_id'        => 'required|integer',
+    //             'district_id'     => 'required|integer',
+    //             'city_id'         => 'required',
+    //             'pin'             => 'required|integer',
+    //         ]);
+                         
+    //         if(isset($request->registration_id_from_admin)){
+    //            $school = SchoolDetails::where('registration_id',$request->registration_id_from_admin)->first();
+
+    //             // Update the record
+    //             $school->board_id    = $request->board_id;
+    //             $school->school_name = $request->school_name;
+    //             $school->state_id    = $request->state_id;
+    //             $school->district_id = $request->district_id;
+    //             $school->city_id     = $request->city_id;
+    //             $school->pin         = $request->pin;
+    //             $school->save();
+    //             return redirect()->back()->with('success', 'School information update successfully.');
+    //         }else{         
+    //             $sr=SchoolDetails::create($request->all());    
+    //             return redirect()->back()->with('success', 'School information saved successfully.');
+    //         }
+    // }
+
+
     public function store(Request $request)
     {
         $request->validate([
@@ -39,18 +70,31 @@ class SchoolDetailsController extends Controller
             'city_id'     => 'required',
             'pin'         => 'required|integer',
         ]);
-        $data = $request->all();
-        $school = SchoolDetails::where('registration_id', $request->registration_id)->first();
-        if ($school) {
-            $school->update($data);
-            $message = 'School information updated successfully.';
-        } else {
-            SchoolDetails::create($data);
-            $message = 'School information saved successfully.';
-        }
-        return redirect(route('head.of.school'))->with('success', $message);
-    }
+        if(isset($request->registration_id_from_admin)){
+            $school = SchoolDetails::where('registration_id',$request->registration_id_from_admin)->first();
 
+             // Update the record
+             $school->board_id    = $request->board_id;
+             $school->school_name = $request->school_name;
+             $school->state_id    = $request->state_id;
+             $school->district_id = $request->district_id;
+             $school->city_id     = $request->city_id;
+             $school->pin         = $request->pin;
+             $school->save();
+             return redirect()->back()->with('success', 'School information update successfully.');
+         }else{ 
+            $data = $request->all();
+            $school = SchoolDetails::where('registration_id', $request->registration_id)->first();
+            if ($school) {
+                $school->update($data);
+                $message = 'School information updated successfully.';
+            } else {
+                SchoolDetails::create($data);
+                $message = 'School information saved successfully.';
+            }
+            return redirect(route('head.of.school'))->with('success', $message);
+        }
+    }
 
     /**
      * Display the specified resource.

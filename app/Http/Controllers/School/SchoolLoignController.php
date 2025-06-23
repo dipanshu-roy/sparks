@@ -50,7 +50,12 @@ class SchoolLoignController extends Controller
 
 
     public function student($code,$codex){
-        $sd = SchoolRegistration::where('school_id',$code)->first(); 
-        return view('web.student',compact('sd','code'));
+
+         $sd = SchoolRegistration::where('school_id',$code)->first(); 
+         return view('web.student',compact('sd','code'));
+
     }
+
+
+    
 }

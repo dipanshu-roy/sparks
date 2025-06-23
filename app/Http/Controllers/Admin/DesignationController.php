@@ -13,7 +13,7 @@ class DesignationController extends Controller
      */
     public function index()
     {
-        
+        $designation = Designation::orderby('id','desc')->get();
         return view('admin.designation.view');
     }
 

@@ -129,6 +129,18 @@
             </div>
         </div>
     @endif
+    <div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="previewModalLabel">Preview Your Information</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="previewContainer"></div>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 @push('scripts')
@@ -234,7 +246,7 @@
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#6c757d',
                 confirmButtonText: 'Yes, submit it!',
-                cancelButtonText: 'Save as Draft'
+                cancelButtonText: 'Preview'
             }).then((result) => {
                 if (result.isConfirmed) {
                     buttonDisable(false);
@@ -245,16 +257,35 @@
                     },5000);
                 } else if (result.dismiss === Swal.DismissReason.cancel) {
                     buttonDisable(false);
-                    Swal.fire({
-                        title: 'Success!',
-                        text: 'Your form has been saved as draft.',
-                        icon: 'success',
-                        confirmButtonText: 'OK'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            ajaxSave(form,2)
+                    ajaxSave(form,2);
+                    $.ajax({
+                        url: "{{ url('preview') }}",
+                        type: 'GET',
+                        beforeSend: function () {
+                            showloader();
+                        },
+                        success: function (response) {
+                            $('#previewContainer').html(response);
+                            $('#previewModal').modal('show');
+                        },
+                        error: function () {
+                            alert("Something went wrong while checking verification.");
+                        },
+                        complete: function () {
+                            hideloader()
                         }
                     });
+                    // Swal.fire({
+                    //     title: 'Success!',
+                    //     text: 'Your form has been saved as draft.',
+                    //     icon: 'success',
+                    //     confirmButtonText: 'OK'
+                    // }).then((result) => {
+                    //     if (result.isConfirmed) {
+                    //         ajaxSave(form,2)
+                    //     }
+                    // });
+
                 }
             });
         });

@@ -19,7 +19,8 @@
 	<meta name="author" content="Codedthemes" />
 
 	<!-- Favicon icon -->
-	<link rel="icon" href="{{asset('admin/images/favicon.ico')}}" type="image/x-icon">
+	<link href="{{ asset('web/assets/img/favicon.png') }}" rel="icon">
+    <link href="{{ asset('web/assets/img/apple-touch-icon.png') }}" rel="apple-touch-icon">
 	<!-- fontawesome icon -->
 	<link rel="stylesheet" href="{{asset('admin/fonts/fontawesome/css/fontawesome-all.min.css')}}">
 	<!-- animation css -->
@@ -32,6 +33,8 @@
 
 
 </head>
+
+@php $code = request('code'); @endphp
 
 <!-- [ auth-signin ] start -->
 <div class="auth-wrapper">
@@ -47,31 +50,23 @@
 						@csrf
 						<div class="input-group mb-2">
 							<div class="input-group-prepend">
-								<span class="input-group-text"><i class="feather icon-mail"></i></span>
+								<span class="input-group-text"><i class="feather icon-user"></i></span>
 							</div>
-							<input type="text" name="school_id" class="form-control" placeholder="Registration ID">
-							@error('school_id')
-								<div class="invalid-feedback">
-									{{ $message }}
-								</div>
-							@enderror
+							<input type="text" name="school_id" value="{{ $code??''}}" class="form-control" placeholder="Registration ID">
+							
 						</div>
+						<x-input-error :messages="$errors->get('school_id')" class="mt-2 text-danger" />
 
 						<div class="input-group mb-3">
 							<div class="input-group-prepend">
 								<span class="input-group-text"><i class="feather icon-lock"></i></span>
 							</div>
 							<input type="password" name="password" class="form-control" placeholder="Password">
-						
-
-							@error('password')
-								<div class="invalid-feedback">
-									{{ $message }}
-								</div>
-							@enderror
+						 
 						</div>
 
-						
+						<x-input-error :messages="$errors->get('password')" class="mt-2 text-danger" />
+
 						
 						<button type="submit" class="btn btn-primary mb-4">Login</button>
 						</form>
